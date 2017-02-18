@@ -1,0 +1,30 @@
+{
+  "name": "lazy-s3",
+  "version": "0.0.1",
+  "description": "a high-level abstraction of s3 functions for lazy programmers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taylorackley/lazy-s3.git"
+  },
+  "keywords": [
+    "lazy",
+    "s3",
+    "aws"
+  ],
+  "author": "taylorackley@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/taylorackley/lazy-s3/issues"
+  },
+  "homepage": "https://github.com/taylorackley/lazy-s3#readme",
+  "dependencies": {
+    "aws-sdk": "^2.16.0",
+    "bluebird": "^3.4.7",
+    "crypto": "0.0.3",
+    "moment": "^2.17.1"
+  }
+}
