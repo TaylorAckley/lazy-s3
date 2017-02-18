@@ -5,7 +5,7 @@ const Promise = require('bluebird');
 const AWS = require('aws-sdk');
 const crypto = require('crypto');
 
-/** Class representing S3 functions.
+/** Class representing S3 functions.   Standard environment variables need to be present.
  * 
  * 
  * @class S3
@@ -15,15 +15,12 @@ class S3 {
     /**
      * Creates an instance of S3. 
      * 
-     * @param {object} config - object containing AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID, AWS_REGION.   Optional.   Will use env variables if not provided.
+     * @param {object} config - Optional object containing 
      * @
      * 
      * @memberOf S3
      */
     constructor(config) {
-        this.AWS_ACCESS_KEY_ID = config.AWS_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID || null;
-        this.AWS_SECRET_ACCESS_KEY = config.AWS_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY || null;
-        this.AWS_REGION = config.AWS_REGION || process.env.AWS_REGION || null;
         this.AWS_BUCKET = config.AWS_BUCKET || process.env.AWS_BUCKET || null;
     }
 
@@ -78,14 +75,14 @@ class S3 {
             let base64Policy = new Buffer(stringPolicy, 'utf-8').toString('base64');
 
             // sign the base64 encoded policy
-            let signature = crypto.createHmac('sha1', appConfig.AWS.AWS_SECRET_ACCESS_KEY)
+            let signature = crypto.createHmac('sha1', process.env.AWS_SECRET_ACCESS_KEY)
                 .update(new Buffer(base64Policy, 'utf-8')).digest('base64');
 
             // build the results object
             let s3Credentials = {
                 s3Policy: base64Policy,
                 s3Signature: signature,
-                AWSAccessKeyId: appConfig.AWS.AWS_ACCESS_KEY_ID
+                AWSAccessKeyId: process.env.AWS_ACCESS_KEY_ID
             };
 
             // send it back
@@ -165,7 +162,7 @@ class S3 {
      * 
      * 
      * @param {string} key - file key.  ex: 'deliverables/myfile.docx'
-     * @param {number} expiration - How long the signed url should last.  leave null for 20 minutes.
+     * @param {number} expiration - How long the signed url should last in minutes.  leave null for 20 minutes.
      * @param {string} bucket - Optional.   Will use bucket if provided, or will use bucket passed into constructor if passed.
      * @returns {Promise} - Signed URL
      * 

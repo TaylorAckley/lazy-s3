@@ -10,17 +10,29 @@ Do you hate writing the same S3 operations multiple times like me?   Well, let m
 - Delete an object for S3.
 - Generate a policy document for browser uploads.
 
+## Advantages
+
+- AWS Documentation can take forever to come through and figure out the arguments.
+- Sets sensisble defaults.
+- Error catching
+- Returns promises
+
+
 ## Usage
 
-Lazy S3 exposes a class, `S3`, that takes a optional object of options.   If you don't pass an object, it will look for env variables.   You can use [Foreman](https://www.npmjs.com/package/foreman) to load in a .env file containing the necessary options if you wish to not bother with setting the options in a object.
+First, you must make sure the following environment variables are set.
+
+- AWS_ACCESS_KEY_ID
+- AWS_SECRET_ACCESS_KEY
+- AWS_BUCKET
 
 Setting a bucket is optional.    If you do set a bucket either through the options object or set it as an environment variable, it will act as the default bucket for all methods.   This means that you don't need to pass a bucket argument to any of the methods when set.  However, if you DO pass in a bucket as a parameter to a method, the argument will be used over the default bucket.   If you don't set a default bucket, you then must pass in a bucket to all methods.
 
+
+Lazy S3 exposes a class, `S3`, that takes a optional object of options.   You can use [Foreman](https://www.npmjs.com/package/foreman) to load in a .env file containing the necessary options if you wish to not bother with setting the options in a object.
+
 ```
-let opts = { //configure options if they are not set as environment variables.
-AWS_ACCESS_KEY_ID: 'xxxxxxx', // or process.env.AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY: 'xxxxxx' // or process.env.AWS_SECRET_ACCESS_KEY
-AWS_REGION: 'us-west-2', // or process.env.AWS_REGION 
+let opts = { //configure default bucket
 AWS_BUCKET: 'my-bucket'  // or process.env.AWS_BUCKET.   Setting either of these is essentially setting a default bucket.
 }
 // constructor
@@ -47,6 +59,17 @@ s3.download('content/output.png', 'my-bucket') // Key and Bucket.  Like the abov
         }
         });
     });
+
+    // Get a presigned url that lasts for x amount of minutes.   Use this method to let users dowload private documents from your buckets.   Defaults to 20 minutes if the 2nd argument is omitted or null.
+    s3.getSignedUrl('mygif.gif', 20, 'my-bucket')
+        .then((url) => console.log(url.url))
+        .catch((err) => console.log(err));
+
+
+        // Create a s3 polixy to be used with browser uploads
+    s3.createS3Policy('application/pdf', 'private', 'my-bucket')
+        .then((policy) => console.log(policy))  // returns object of policy information.
+        .catch((err) => console.log(err));
 
 ```
 
