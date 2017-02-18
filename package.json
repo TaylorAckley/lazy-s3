@@ -4,7 +4,7 @@
   "description": "a high-level abstraction of s3 functions for lazy programmers",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/mocha/bin/mocha tests/test.js"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "dotenv": "^4.0.0",
     "mocha": "^3.2.0"
   }
 }
