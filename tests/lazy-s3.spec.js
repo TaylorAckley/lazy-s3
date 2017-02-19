@@ -52,22 +52,43 @@ describe('S3', () => {
                 if (err) {
                     console.log(err);
                 }
-                console.log(data);
-                s3.upload(data, filename)
-                    .then((res) => res.should.have.property('Key').equals(filename))
+                s3.upload(data, filename, 'image/jpeg')
+                    .then((res) => {
+                    res.should.have.property('Key').equals(filename)
+                    done();
+                })
+                    .catch((err) => console.log(err));
+            });
+        });
+            it('should upload a file', (done) => {
+            let s3 = new S3();
+            let img = fs.readFile('./tests/sample.jpg', (err, data) => {
+                if (err) {
+                    console.log(err);
+                }
+                s3.upload(data, filename, 'image/jpeg')
+                    .then((res) => {
+                    res.should.have.property('Key').equals(filename)
+                    done();
+                })
                     .catch((err) => console.log(err));
             });
         });
     });
 
     describe('download', (done) => {
-        it('should respond with the file', (done) => {
+        it('should respond the file', (done) => {
             let s3 = new S3();
-            s3.download('sample.png', 'lazy-s3')
+            s3.download(filename)
                 .then((res) => {
+                    console.log(res);
+                    res.should.have.property('Body');
                     done();
                 })
-                .catch((err) => done(err));
+                .catch((err) => {
+                    console.log(err);
+                done(err)
+                });
         });
     });
 

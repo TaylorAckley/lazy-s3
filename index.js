@@ -53,6 +53,9 @@ class S3 {
     createS3Policy(contentType, acl, bucket) {
         let _bucket = bucket || this.AWS_BUCKET;
         return new Promise(function (resolve, reject) {
+            if(!contentType || contentType === null) {
+                reject('Error, no content type (MIME) specified.');
+            }
             let _contentType = contentType || "";
             let _acl = acl || 'private';
             let date = new Date();
@@ -106,7 +109,7 @@ class S3 {
         let _bucket = bucket || this.AWS_BUCKET;
         return new Promise(function (resolve, reject) {
             if (!key) {
-                reject('Error, no key');
+                reject('Error, no key specified');
             }
             let s3 = new AWS.S3();
             s3.deleteObjects({
@@ -131,21 +134,35 @@ class S3 {
      * 
      * @param {buffer} body - Buffer of the file to be uploaded.
      * @param {string} key - key of the uploaded 
+     * @param {string} contentType - mime type of the file to be upload. 
      * @param {string} bucket - Optional.   Will use bucket if provided, or will use bucket passed into constructor if passed.
      * @param {string} acl - Optional.   ACL to use.   Defaults to private.
      * @returns {Promise}
      * 
      * @memberOf S3
      */
-    upload(body, key, bucket, acl) {
+    upload(body, key, contentType, bucket, acl) {
         let _bucket = bucket || this.AWS_BUCKET;
         return new Promise(function (resolve, reject) {
+            if (!body || body === null) {
+                reject('Nothing to upload.   Please include a buffer.');
+            }
+            if (!Buffer.isBuffer(body)) {
+                reject(`body is a ${typeof(body)}.  Please provide a valid buffer.`);
+            }
+            if (!key || key === null) {
+                reject('Error, no key specified');
+            }
+            if (!contentType || contentType === null) {
+                reject('No Content Type (MIME) specified.');
+            }
             let _acl = acl || 'private';
             let s3obj = new AWS.S3({
                 params: {
                     Bucket: _bucket,
                     Key: key,
-                    ACL: _acl
+                    ACL: _acl,
+                    contentType: contentType
                 }
             });
             s3obj.upload({ // upload the deliverable to S3
@@ -174,6 +191,9 @@ class S3 {
     getSignedUrl(key, expiration, bucket) {
         let _bucket = bucket || this.AWS_BUCKET;
         return new Promise(function (resolve, reject) {
+                        if(!key || key === null) {
+                reject('Error, no key specified');
+            }
             let _defaultExp = 60 * 20 // 20 minutes.
             let _exp = expiration ? expiration * 60 : _defaultExp;
             let s3 = new AWS.S3();
@@ -188,7 +208,7 @@ class S3 {
     /**
      * 
      * 
-     * @param {string} key ex: 'processed/kitty.png'
+     * @param {string} key ex: 'processed/kitty.png'.  Required.
      * @param {string} bucket - Optional.   Will use bucket if provided, or will use bucket passed into constructor if passed.
      * @returns {Promise} - Resolved to promise wih with buffer representation of download.   Buffer can be used as a stream or written to a file.
      * 
@@ -197,12 +217,21 @@ class S3 {
     download(key, bucket) {
         let _bucket = bucket || this.AWS_BUCKET;
         return new Promise(function (resolve, reject) {
+            if(!key || key === null) {
+                reject('No key specified.');
+            }
             let s3 = new AWS.S3();
             let params = {
                 Bucket: _bucket,
                 Key: key
             };
             s3.getObject(params, (err, data) => {
+                if (err) {
+                    reject('There was an error processing');
+                }
+                if (data === null) {
+                    reject('File not found.');
+                }
                 resolve(data);
             });
         });
