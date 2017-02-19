@@ -60,28 +60,77 @@ describe('S3', () => {
                     .catch((err) => console.log(err));
             });
         });
-            it('should upload a file', (done) => {
+            it('should error when no body is passed', (done) => {
             let s3 = new S3();
             let img = fs.readFile('./tests/sample.jpg', (err, data) => {
                 if (err) {
                     console.log(err);
                 }
-                s3.upload(data, filename, 'image/jpeg')
+                s3.upload(null, filename, 'image/jpeg')
                     .then((res) => {
-                    res.should.have.property('Key').equals(filename)
-                    done();
+                    console.log(res);
                 })
-                    .catch((err) => console.log(err));
+                    .catch((err) => {
+                        err.should.equal('Nothing to upload.   Please include a buffer.');
+                        done();
+                    });
+            });
+        });
+            it('should error when body is a string', (done) => {
+            let s3 = new S3();
+            let img = fs.readFile('./tests/sample.jpg', (err, data) => {
+                if (err) {
+                    console.log(err);
+                }
+                s3.upload('hello', filename, 'image/jpeg')
+                    .then((res) => {
+                    console.log(res);
+                })
+                    .catch((err) => {
+                        err.should.equal('body is a string.  Please provide a valid buffer.');
+                        done();
+                    });
+            });
+        });
+            it('should error when filename is a null', (done) => {
+            let s3 = new S3();
+            let img = fs.readFile('./tests/sample.jpg', (err, data) => {
+                if (err) {
+                    console.log(err);
+                }
+                s3.upload(data, null, 'image/jpeg')
+                    .then((res) => {
+                    console.log(res);
+                })
+                    .catch((err) => {
+                        err.should.equal('Error, no key specified');
+                        done();
+                    });
+            });
+        });
+            it('should error when contentType is a null', (done) => {
+            let s3 = new S3();
+            let img = fs.readFile('./tests/sample.jpg', (err, data) => {
+                if (err) {
+                    console.log(err);
+                }
+                s3.upload(data, filename, null)
+                    .then((res) => {
+                    console.log(res);
+                })
+                    .catch((err) => {
+                        err.should.equal('No Content Type (MIME) specified.');
+                        done();
+                    });
             });
         });
     });
 
     describe('download', (done) => {
-        it('should respond the file', (done) => {
+        it('should respond with the file', (done) => {
             let s3 = new S3();
             s3.download(filename)
                 .then((res) => {
-                    console.log(res);
                     res.should.have.property('Body');
                     done();
                 })

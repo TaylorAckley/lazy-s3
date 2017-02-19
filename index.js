@@ -5,8 +5,6 @@ const Promise = require('bluebird');
 const AWS = require('aws-sdk');
 const crypto = require('crypto');
 
-console.log(process.env.AWS_BUCKET); // returrns defined
-
 /** Class representing S3 functions.   Standard environment variables need to be present.
  * 
  * 
@@ -24,7 +22,6 @@ class S3 {
      */
     constructor(bucket) {
         this.AWS_BUCKET = bucket || process.env.AWS_BUCKET;
-        console.log(this.AWS_BUCKET); // returns defined
     }
 
     /** 
@@ -132,8 +129,8 @@ class S3 {
     /**
      * 
      * 
-     * @param {buffer} body - Buffer of the file to be uploaded.
-     * @param {string} key - key of the uploaded 
+     * @param {buffer} body - Buffer of the file to be uploaded.  Must be a valid buffer.
+     * @param {string} key - key of the file to be uploaded.
      * @param {string} contentType - mime type of the file to be upload. 
      * @param {string} bucket - Optional.   Will use bucket if provided, or will use bucket passed into constructor if passed.
      * @param {string} acl - Optional.   ACL to use.   Defaults to private.
