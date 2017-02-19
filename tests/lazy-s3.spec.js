@@ -48,7 +48,7 @@ describe('S3', () => {
     describe('upload', (done) => {
         it('should upload a file', (done) => {
             let s3 = new S3();
-            let img = fs.readFile('./tests/sample.jpg', (err, data) => {
+            let img = fs.readFile('./sample.jpg', (err, data) => {
                 if (err) {
                     console.log(err);
                 }
@@ -62,7 +62,7 @@ describe('S3', () => {
         });
         it('should error when no body is passed', (done) => {
             let s3 = new S3();
-            let img = fs.readFile('./tests/sample.jpg', (err, data) => {
+            let img = fs.readFile('./sample.jpg', (err, data) => {
                 if (err) {
                     console.log(err);
                 }
@@ -78,7 +78,7 @@ describe('S3', () => {
         });
         it('should error when body is a string', (done) => {
             let s3 = new S3();
-            let img = fs.readFile('./tests/sample.jpg', (err, data) => {
+            let img = fs.readFile('./sample.jpg', (err, data) => {
                 if (err) {
                     console.log(err);
                 }
@@ -94,7 +94,7 @@ describe('S3', () => {
         });
         it('should error when filename is a null', (done) => {
             let s3 = new S3();
-            let img = fs.readFile('./tests/sample.jpg', (err, data) => {
+            let img = fs.readFile('./sample.jpg', (err, data) => {
                 if (err) {
                     console.log(err);
                 }
@@ -110,7 +110,7 @@ describe('S3', () => {
         });
         it('should error when contentType is a null', (done) => {
             let s3 = new S3();
-            let img = fs.readFile('./tests/sample.jpg', (err, data) => {
+            let img = fs.readFile('./sample.jpg', (err, data) => {
                 if (err) {
                     console.log(err);
                 }
