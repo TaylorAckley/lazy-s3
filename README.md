@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/TaylorAckley/lazy-s3.svg?branch=master)](https://travis-ci.org/TaylorAckley/lazy-s3)
-
+[![Coverage Status](https://coveralls.io/repos/github/TaylorAckley/lazy-s3/badge.svg)](https://coveralls.io/github/TaylorAckley/lazy-s3)
 # Lazy S3
 
 Do you hate writing the same S3 operations multiple times like me?   Well, let me save you about 15 minutes and give you some high level abstraction of common S3 operations.
