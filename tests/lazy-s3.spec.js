@@ -127,7 +127,7 @@ describe('S3', () => {
     });
 
     describe('download', (done) => {
-        it('should respond with the file', (done) => {
+        it('should respond with a file', (done) => {
             let s3 = new S3();
             s3.download(filename)
                 .then((res) => {
@@ -139,7 +139,104 @@ describe('S3', () => {
                 done(err)
                 });
         });
+        it('should throw an error if no key is present', (done) => {
+            let s3 = new S3();
+            s3.download()
+                .then((res) => {
+                    console.log(res);
+                })
+                .catch((err) => {
+                    err.should.equal('No key specified.');
+                done()
+                });
+        });
+            it('should throw an error if no file is found', (done) => {
+            let s3 = new S3();
+            s3.download('kitty')
+                .then((res) => {
+                    console.log(res);
+                })
+                .catch((err) => {
+                    should.exist(err);
+                done()
+                });
+        });
+    });
+
+    describe('getSignedUrl', (done) => {
+        it('should respond with the url', (done) => {
+            let s3 = new S3();
+            s3.getSignedUrl(filename)
+                .then((res) => {
+                    res.should.contain('https');
+                    done();
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        });
+        it('should throw an error if no key is present.', (done) => {
+            let s3 = new S3();
+            s3.getSignedUrl()
+                .then((res) => {
+                    console.log(res);
+                })
+                .catch((err) => {
+                    err.should.equal('Error, no key specified');
+                done()
+                });
+        });
     });
 
 
+    describe('delete', (done) => {
+        it('should respond with success', (done) => {
+            let s3 = new S3();
+            s3.deleteS3Object(filename)
+                .then((res) => {
+                    res['Deleted'][0]['Key'].should.equal(filename);
+                    done();
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        });
+        it('should throw an error if no key is present.', (done) => {
+            let s3 = new S3();
+            s3.deleteS3Object()
+                .then((res) => {
+                    console.log(res);
+                })
+                .catch((err) => {
+                    err.should.equal('Error, no key specified');
+                done()
+                });
+        });
+    });
+});
+
+    describe('getExpiryTime', (done) => {
+        it('should respond with success', (done) => {
+            let s3 = new S3();
+            s3.deleteS3Object(filename)
+                .then((res) => {
+                    res['Deleted'][0]['Key'].should.equal(filename);
+                    done();
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        });
+        it('should throw an error if no key is present.', (done) => {
+            let s3 = new S3();
+            s3.deleteS3Object()
+                .then((res) => {
+                    console.log(res);
+                })
+                .catch((err) => {
+                    err.should.equal('Error, no key specified');
+                done()
+                });
+        });
+    });
 });

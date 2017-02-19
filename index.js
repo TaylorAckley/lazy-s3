@@ -50,7 +50,7 @@ class S3 {
     createS3Policy(contentType, acl, bucket) {
         let _bucket = bucket || this.AWS_BUCKET;
         return new Promise(function (resolve, reject) {
-            if(!contentType || contentType === null) {
+            if (!contentType || contentType === null) {
                 reject('Error, no content type (MIME) specified.');
             }
             let _contentType = contentType || "";
@@ -96,7 +96,7 @@ class S3 {
     /**
      * 
      * 
-     * @param {string} key
+     * @param {string} key - Required
      * @param {string} bucket - Optional.   Will use bucket if provided, or will use bucket passed into constructor if passed. - Optional.   Will use bucket if provided, or will use bucket passed into constructor if passed.
      * @returns {Promise}
      * 
@@ -118,7 +118,6 @@ class S3 {
                 }
             }, function (err, data) {
                 if (err) {
-                    console.log(err);
                     reject(err);
                 }
                 resolve(data);
@@ -180,7 +179,7 @@ class S3 {
      * 
      * @param {string} key - file key.  ex: 'deliverables/myfile.docx'
      * @param {number} expiration - How long the signed url should last in minutes.  leave null for 20 minutes.
-     * @param {string} bucket - Optional.   Will use bucket if provided, or will use bucket passed into constructor if passed.
+     * @param {string} bucket - Optional.   Will use bucket if provided, or will use bucket passed into constructor.
      * @returns {Promise} - Signed URL
      * 
      * @memberOf S3
@@ -188,7 +187,7 @@ class S3 {
     getSignedUrl(key, expiration, bucket) {
         let _bucket = bucket || this.AWS_BUCKET;
         return new Promise(function (resolve, reject) {
-                        if(!key || key === null) {
+            if (!key || key === null) {
                 reject('Error, no key specified');
             }
             let _defaultExp = 60 * 20 // 20 minutes.
@@ -207,14 +206,14 @@ class S3 {
      * 
      * @param {string} key ex: 'processed/kitty.png'.  Required.
      * @param {string} bucket - Optional.   Will use bucket if provided, or will use bucket passed into constructor if passed.
-     * @returns {Promise} - Resolved to promise wih with buffer representation of download.   Buffer can be used as a stream or written to a file.
+     * @returns {Promise} - Resolves to promise wih with buffer representation of download.   Buffer can be used as a stream or written to a file.
      * 
      * @memberOf S3
      */
     download(key, bucket) {
         let _bucket = bucket || this.AWS_BUCKET;
         return new Promise(function (resolve, reject) {
-            if(!key || key === null) {
+            if (!key || key === null) {
                 reject('No key specified.');
             }
             let s3 = new AWS.S3();
@@ -224,10 +223,10 @@ class S3 {
             };
             s3.getObject(params, (err, data) => {
                 if (err) {
-                    reject('There was an error processing');
+                    reject(err);
                 }
                 if (data === null) {
-                    reject('File not found.');
+                    reject('Key not found.  No data was returned.');
                 }
                 resolve(data);
             });
