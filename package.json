@@ -4,7 +4,7 @@
   "description": "a high-level abstraction of s3 functions for lazy programmers",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha tests/test.js"
+    "test": "mocha tests/lazy-s3.spec.js"
   },
   "repository": {
     "type": "git",
@@ -30,6 +30,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "dotenv": "^4.0.0",
+    "jsdoc": "^3.4.3",
     "mocha": "^3.2.0"
   }
 }

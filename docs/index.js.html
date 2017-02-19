@@ -1,11 +1,37 @@
-"use strict";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: index.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: index.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
 
 const moment = require('moment');
 const Promise = require('bluebird');
 const AWS = require('aws-sdk');
 const crypto = require('crypto');
-
-console.log(process.env.AWS_BUCKET); // returrns defined
 
 /** Class representing S3 functions.   Standard environment variables need to be present.
  * 
@@ -17,43 +43,42 @@ class S3 {
     /**
      * Creates an instance of S3. 
      * 
-     * @param {string} bucket - Optional string containing default bucket.   Uses process.env.AWS_BUCKET as default if not provided.
+     * @param {object} config - Optional object containing 
      * @
      * 
      * @memberOf S3
      */
-    constructor(bucket) {
-        this.AWS_BUCKET = bucket || process.env.AWS_BUCKET;
-        console.log(this.AWS_BUCKET); // returns defined
+    constructor(config) {
+        this.AWS_BUCKET = config.AWS_BUCKET || process.env.AWS_BUCKET || null;
     }
 
-    /** 
-     *  Get expiration time for S3 policy
-     * 
-     * @returns {string} returns expiration time for S3 policy
-     * 
-     * @memberOf S3
-     */
-    getExpiryTime() {
+        /** 
+         *  Get expiration time for S3 policy
+         * 
+         * @returns {string} returns expiration time for S3 policy
+         * 
+         * @memberOf S3
+         */
+        getExpiryTime() {
         let _date = new Date();
         return '' + (_date.getFullYear()) + '-' + (_date.getMonth() + 1) + '-' +
             (_date.getDate() + 1) + 'T' + (_date.getHours() + 3) + ':' + '00:00.000Z';
     }
 
-    /**
-     *  Generates a policy for browser uploads
-     * 
-     * @param {string} contentType - Mime type for file to be uploaded.
-     * @param {string} acl - acl type for file to be uploaded.   either 'public-read' or 'private' @default is 'private'
-     * @param {string} bucket - Optional.   Will use bucket if provided, or will use bucket passed into constructor if passed. - Optional.   Will use bucket if provided, or will use bucket passed into constructor if passed.
-     * @returns {Promise} Base64 encoded representation of policy
-     * 
-     * @memberOf S3
-     */
-    createS3Policy(contentType, acl, bucket) {
-        let _bucket = bucket || this.AWS_BUCKET;
-        return new Promise(function (resolve, reject) {
+        /**
+         *  Generates a policy for browser uploads
+         * 
+         * @param {string} contentType - Mime type for file to be uploaded.
+         * @param {string} acl - acl type for file to be uploaded.   either 'public-read' or 'private' @default is 'private'
+         * @param {string} bucket - Optional.   Will use bucket if provided, or will use bucket passed into constructor if passed. - Optional.   Will use bucket if provided, or will use bucket passed into constructor if passed.
+         * @returns {Promise} Base64 encoded representation of policy
+         * 
+         * @memberOf S3
+         */
+        createS3Policy(contentType, acl, bucket) {
+        return new Promise(function(resolve, reject) {
             let _contentType = contentType || "";
+            let _bucket = bucket || this.AWS_BUCKET;
             let _acl = acl || 'private';
             let date = new Date();
             var s3Policy = {
@@ -102,9 +127,9 @@ class S3 {
      * 
      * @memberOf S3
      */
-    deleteS3Object(key, bucket) {
-        let _bucket = bucket || this.AWS_BUCKET;
-        return new Promise(function (resolve, reject) {
+        deleteS3Object(key, bucket) {
+        return new Promise(function(resolve, reject) {
+            let _bucket = bucket || this.AWS_BUCKET;
             if (!key) {
                 reject('Error, no key');
             }
@@ -116,7 +141,7 @@ class S3 {
                         Key: key
                     }]
                 }
-            }, function (err, data) {
+            }, function(err, data) {
                 if (err) {
                     console.log(err);
                     reject(err);
@@ -137,9 +162,9 @@ class S3 {
      * 
      * @memberOf S3
      */
-    upload(body, key, bucket, acl) {
-        let _bucket = bucket || this.AWS_BUCKET;
-        return new Promise(function (resolve, reject) {
+        upload(body, key, bucket, acl) {
+        return new Promise(function(resolve, reject) {
+            let _bucket = bucket || this.AWS_BUCKET;
             let _acl = acl || 'private';
             let s3obj = new AWS.S3({
                 params: {
@@ -151,7 +176,7 @@ class S3 {
             s3obj.upload({ // upload the deliverable to S3
                     Body: body
                 })
-                .send(function (err, data) {
+                .send(function(err, data) {
                     if (err) {
                         reject(err);
                     }
@@ -172,8 +197,8 @@ class S3 {
      * @memberOf S3
      */
     getSignedUrl(key, expiration, bucket) {
-        let _bucket = bucket || this.AWS_BUCKET;
-        return new Promise(function (resolve, reject) {
+        return new Promise(function(resolve, reject) {
+            let _bucket = bucket || this.AWS_BUCKET;
             let _defaultExp = 60 * 20 // 20 minutes.
             let _exp = expiration ? expiration * 60 : _defaultExp;
             let s3 = new AWS.S3();
@@ -195,19 +220,44 @@ class S3 {
      * @memberOf S3
      */
     download(key, bucket) {
-        let _bucket = bucket || this.AWS_BUCKET;
-        return new Promise(function (resolve, reject) {
+        return new Promise(function(resolve, reject) {
+            let _bucket = bucket || this.AWS_BUCKET;
             let s3 = new AWS.S3();
             let params = {
                 Bucket: _bucket,
                 Key: key
             };
+            var data;
             s3.getObject(params, (err, data) => {
-                resolve(data);
-            });
+                    resolve(data);
+                });
         });
     }
 
 }
 
 module.exports = S3;
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="S3.html">S3</a></li><li><a href="S3.S3.html">S3</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Sat Feb 18 2017 15:58:56 GMT-0800 (Pacific Standard Time (Mexico))
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
