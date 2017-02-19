@@ -54,13 +54,13 @@ describe('S3', () => {
                 }
                 s3.upload(data, filename, 'image/jpeg')
                     .then((res) => {
-                    res.should.have.property('Key').equals(filename)
-                    done();
-                })
+                        res.should.have.property('Key').equals(filename)
+                        done();
+                    })
                     .catch((err) => console.log(err));
             });
         });
-            it('should error when no body is passed', (done) => {
+        it('should error when no body is passed', (done) => {
             let s3 = new S3();
             let img = fs.readFile('./tests/sample.jpg', (err, data) => {
                 if (err) {
@@ -68,15 +68,15 @@ describe('S3', () => {
                 }
                 s3.upload(null, filename, 'image/jpeg')
                     .then((res) => {
-                    console.log(res);
-                })
+                        console.log(res);
+                    })
                     .catch((err) => {
                         err.should.equal('Nothing to upload.   Please include a buffer.');
                         done();
                     });
             });
         });
-            it('should error when body is a string', (done) => {
+        it('should error when body is a string', (done) => {
             let s3 = new S3();
             let img = fs.readFile('./tests/sample.jpg', (err, data) => {
                 if (err) {
@@ -84,15 +84,15 @@ describe('S3', () => {
                 }
                 s3.upload('hello', filename, 'image/jpeg')
                     .then((res) => {
-                    console.log(res);
-                })
+                        console.log(res);
+                    })
                     .catch((err) => {
                         err.should.equal('body is a string.  Please provide a valid buffer.');
                         done();
                     });
             });
         });
-            it('should error when filename is a null', (done) => {
+        it('should error when filename is a null', (done) => {
             let s3 = new S3();
             let img = fs.readFile('./tests/sample.jpg', (err, data) => {
                 if (err) {
@@ -100,15 +100,15 @@ describe('S3', () => {
                 }
                 s3.upload(data, null, 'image/jpeg')
                     .then((res) => {
-                    console.log(res);
-                })
+                        console.log(res);
+                    })
                     .catch((err) => {
                         err.should.equal('Error, no key specified');
                         done();
                     });
             });
         });
-            it('should error when contentType is a null', (done) => {
+        it('should error when contentType is a null', (done) => {
             let s3 = new S3();
             let img = fs.readFile('./tests/sample.jpg', (err, data) => {
                 if (err) {
@@ -116,8 +116,8 @@ describe('S3', () => {
                 }
                 s3.upload(data, filename, null)
                     .then((res) => {
-                    console.log(res);
-                })
+                        console.log(res);
+                    })
                     .catch((err) => {
                         err.should.equal('No Content Type (MIME) specified.');
                         done();
@@ -136,7 +136,7 @@ describe('S3', () => {
                 })
                 .catch((err) => {
                     console.log(err);
-                done(err)
+                    done(err)
                 });
         });
         it('should throw an error if no key is present', (done) => {
@@ -147,10 +147,10 @@ describe('S3', () => {
                 })
                 .catch((err) => {
                     err.should.equal('No key specified.');
-                done()
+                    done()
                 });
         });
-            it('should throw an error if no file is found', (done) => {
+        it('should throw an error if no file is found', (done) => {
             let s3 = new S3();
             s3.download('kitty')
                 .then((res) => {
@@ -158,7 +158,7 @@ describe('S3', () => {
                 })
                 .catch((err) => {
                     should.exist(err);
-                done()
+                    done()
                 });
         });
     });
@@ -183,7 +183,7 @@ describe('S3', () => {
                 })
                 .catch((err) => {
                     err.should.equal('Error, no key specified');
-                done()
+                    done()
                 });
         });
     });
@@ -209,44 +209,44 @@ describe('S3', () => {
                 })
                 .catch((err) => {
                     err.should.equal('Error, no key specified');
-                done()
+                    done()
                 });
         });
     });
 });
 
-    describe('getExpiryTime', (done) => {
-        it('should respond with a value', (done) => {
-            let s3 = new S3();
-            let exp = s3.getExpiryTime();
-            should.exist(exp);
-            done();
+describe('getExpiryTime', (done) => {
+    it('should respond with a value', (done) => {
+        let s3 = new S3();
+        let exp = s3.getExpiryTime();
+        should.exist(exp);
+        done();
     });
 });
 
-    describe('createS3Policy', (done) => {
-        it('should return a policy', (done) => {
- let s3 = new S3();
-            s3.createS3Policy('application/pdf')
-                .then((res) => {
-                    res.should.have.property('s3Policy');
-                    done();
-                })
-                .catch((err) => {
-                    console.log(err);
+describe('createS3Policy', (done) => {
+    it('should return a policy', (done) => {
+        let s3 = new S3();
+        s3.createS3Policy('application/pdf')
+            .then((res) => {
+                res.should.have.property('s3Policy');
+                done();
+            })
+            .catch((err) => {
+                console.log(err);
                 done(err)
-                });
-        });
-        it('should throw an error if contenttype isnt present', (done) => {
- let s3 = new S3();
-            s3.createS3Policy()
-                .then((res) => {
-                    //...
-                })
-                .catch((err) => {
-                    err.should.equal('Error, no content type (MIME) specified.');
-                done()
-                });
-        });
-
+            });
     });
+    it('should throw an error if contenttype isnt present', (done) => {
+        let s3 = new S3();
+        s3.createS3Policy()
+            .then((res) => {
+                //...
+            })
+            .catch((err) => {
+                err.should.equal('Error, no content type (MIME) specified.');
+                done()
+            });
+    });
+
+});

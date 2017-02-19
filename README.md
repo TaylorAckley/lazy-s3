@@ -1,4 +1,4 @@
-# ALPHA RELEASE.   Untested.
+[![Build Status](https://travis-ci.org/TaylorAckley/lazy-s3.svg?branch=master)](https://travis-ci.org/TaylorAckley/lazy-s3)
 
 # Lazy S3
 
@@ -14,7 +14,8 @@ Do you hate writing the same S3 operations multiple times like me?   Well, let m
 
 - AWS Documentation can take forever to come through and figure out the arguments.
 - Sets sensisble defaults.
-- Error catching
+- Makes you set a content-type.
+- Error catching for missed params.
 - Returns promises
 
 
@@ -26,26 +27,24 @@ First, you must make sure the following environment variables are set.
 - AWS_SECRET_ACCESS_KEY
 - AWS_BUCKET
 
-Setting a bucket is optional.    If you do set a bucket either through the options object or set it as an environment variable, it will act as the default bucket for all methods.   This means that you don't need to pass a bucket argument to any of the methods when set.  However, if you DO pass in a bucket as a parameter to a method, the argument will be used over the default bucket.   If you don't set a default bucket, you then must pass in a bucket to all methods.
+Setting a bucket is optional.    If you do set a bucket either through the options object or set it as an environment variable, it will act as the default bucket for all methods.   This means that you don't need to pass a bucket argument to any of the methods when set.  However, if you DO pass in a bucket as a parameter to a method, the argument will be used over the default bucket.
 
 
 Lazy S3 exposes a class, `S3`, that takes a optional object of options.   You can use [Foreman](https://www.npmjs.com/package/foreman) to load in a .env file containing the necessary options if you wish to not bother with setting the options in a object.
 
-```
-let opts = { //configure default bucket
-AWS_BUCKET: 'my-bucket'  // or process.env.AWS_BUCKET.   Setting either of these is essentially setting a default bucket.
-}
-// constructor
-let s3 = new S3(opts);
+```javascript
 
-// read a file and upload the contents to s3.f
+// constructor
+let s3 = new S3('my-default-bucket'); // or process.env.AWS_BUCKET.   Setting either of these is essentially setting a default bucket.
+
+// read a file and upload the contents to s3.
 fs.readFile('input.png', (err, data) => {
    if (err) {
       return console.error(err);
    }
-   // File as buffer, key, bucket.  Bucket is optional if default bucket has been specified.
+   // File as buffer, key, content-type, bucket.  Bucket is optional if default bucket has been specified.
    // Returns promise.
-   s3.upload(data, 'content/input.png', 'my-bucket')  
+   s3.upload(data, 'content/input.png', 'image/png', 'my-bucket')
     .then((res) => console.log(res)) // res is the returned metadata from s3 detailing the created object.
     .catch((err) => console.log(err));
 });

@@ -51,6 +51,9 @@ class S3 {
         let _bucket = bucket || this.AWS_BUCKET;
         let _exp = this.getExpiryTime()
         return new Promise(function (resolve, reject) {
+            if (!_bucket) {
+                reject('No default bucket set.   Please pass in a bucket as an argument.');
+            }
             if (!contentType || contentType === null) {
                 reject('Error, no content type (MIME) specified.');
             }
@@ -106,6 +109,9 @@ class S3 {
     deleteS3Object(key, bucket) {
         let _bucket = bucket || this.AWS_BUCKET;
         return new Promise(function (resolve, reject) {
+            if (!_bucket) {
+                reject('No default bucket set.   Please pass in a bucket as an argument.');
+            }
             if (!key) {
                 reject('Error, no key specified');
             }
@@ -141,6 +147,9 @@ class S3 {
     upload(body, key, contentType, bucket, acl) {
         let _bucket = bucket || this.AWS_BUCKET;
         return new Promise(function (resolve, reject) {
+            if (!_bucket) {
+                reject('No default bucket set.   Please pass in a bucket as an argument.');
+            }
             if (!body || body === null) {
                 reject('Nothing to upload.   Please include a buffer.');
             }
@@ -188,6 +197,9 @@ class S3 {
     getSignedUrl(key, expiration, bucket) {
         let _bucket = bucket || this.AWS_BUCKET;
         return new Promise(function (resolve, reject) {
+            if (!_bucket) {
+                reject('No default bucket set.   Please pass in a bucket as an argument.');
+            }
             if (!key || key === null) {
                 reject('Error, no key specified');
             }
@@ -214,6 +226,9 @@ class S3 {
     download(key, bucket) {
         let _bucket = bucket || this.AWS_BUCKET;
         return new Promise(function (resolve, reject) {
+            if (!_bucket) {
+                reject('No default bucket set.   Please pass in a bucket as an argument.');
+            }
             if (!key || key === null) {
                 reject('No key specified.');
             }
