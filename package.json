@@ -1,6 +1,6 @@
 {
   "name": "lazy-s3",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "a high-level abstraction of s3 functions for lazy programmers",
   "main": "index.js",
   "scripts": {
