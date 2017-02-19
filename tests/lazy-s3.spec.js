@@ -216,27 +216,37 @@ describe('S3', () => {
 });
 
     describe('getExpiryTime', (done) => {
-        it('should respond with success', (done) => {
+        it('should respond with a value', (done) => {
             let s3 = new S3();
-            s3.deleteS3Object(filename)
+            let exp = s3.getExpiryTime();
+            should.exist(exp);
+            done();
+    });
+});
+
+    describe('createS3Policy', (done) => {
+        it('should return a policy', (done) => {
+ let s3 = new S3();
+            s3.createS3Policy('application/pdf')
                 .then((res) => {
-                    res['Deleted'][0]['Key'].should.equal(filename);
+                    res.should.have.property('s3Policy');
                     done();
                 })
                 .catch((err) => {
                     console.log(err);
+                done(err)
                 });
         });
-        it('should throw an error if no key is present.', (done) => {
-            let s3 = new S3();
-            s3.deleteS3Object()
+        it('should throw an error if contenttype isnt present', (done) => {
+ let s3 = new S3();
+            s3.createS3Policy()
                 .then((res) => {
-                    console.log(res);
+                    //...
                 })
                 .catch((err) => {
-                    err.should.equal('Error, no key specified');
+                    err.should.equal('Error, no content type (MIME) specified.');
                 done()
                 });
         });
+
     });
-});

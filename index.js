@@ -49,6 +49,7 @@ class S3 {
      */
     createS3Policy(contentType, acl, bucket) {
         let _bucket = bucket || this.AWS_BUCKET;
+        let _exp = this.getExpiryTime()
         return new Promise(function (resolve, reject) {
             if (!contentType || contentType === null) {
                 reject('Error, no content type (MIME) specified.');
@@ -57,7 +58,7 @@ class S3 {
             let _acl = acl || 'private';
             let date = new Date();
             var s3Policy = {
-                'expiration': module.exports.aws.getExpiryTime(),
+                'expiration': _exp,
                 'conditions': [ //https://aws.amazon.com/articles/1434/
                     ['starts-with', '$key', ''], {
                         'bucket': _bucket
