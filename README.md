@@ -20,6 +20,10 @@ Do you hate writing the same S3 operations multiple times like me?   Well, let m
 - Error catching for missed params.
 - Returns promises
 
+## Installation
+
+`npm i lazy-s3 --save`
+
 
 ## Usage
 
